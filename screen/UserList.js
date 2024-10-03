@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
-import { QrCode, CreditCard } from 'lucide-react-native'; 
+import { QrCode, CreditCard, Trash2 } from 'lucide-react-native'; 
 
 const UserList = ({ 
   users, 
@@ -65,7 +65,7 @@ const UserList = ({
             <Text style={styles.userName}>{item.name}</Text>
             <Text style={styles.userDetail}>Phòng: {item.department}</Text>
           </View>
-          <View style={styles.buttonContainer}>
+          <View style={styles.buttonContainer}>           
             <TouchableOpacity 
               style={[styles.button, styles.iconButton]} 
               onPress={() => onSelectServices(item)}
@@ -77,6 +77,13 @@ const UserList = ({
               onPress={() => onOpenPayment(item)}
             >
               <CreditCard size={20} color="white" />
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.button, styles.deleteButton]} 
+              onPress={() => onDeleteUser(item.id)}
+            >
+               <Trash2 size={20} color="white" />
             </TouchableOpacity>
           </View>
         </>

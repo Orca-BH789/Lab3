@@ -62,7 +62,7 @@ export const addOrUpdateServiceInFirestore = (service) => async (dispatch) => {
 export const fetchServicesFromFirestore = () => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const snapshot = await getDocs(collection(db, 'services')); // Use getDocs with collection()
+    const snapshot = await getDocs(collection(db, 'services')); 
     const services = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     dispatch(setServices(services));
   } catch (error) {

@@ -48,7 +48,7 @@ export const SettingScreen = () => {
       <Text style={styles.header}>Settings</Text>
       <Text style={styles.subHeader}>
         Change your basic account settings here. You may also want to{' '}
-        <Text style={styles.link}>edit your profile</Text>.
+        <Text style={styles.link} onPress={() => setIsEditing(!isEditing)} >edit your profile</Text>.
       </Text>
 
       <TextInput
@@ -76,7 +76,7 @@ export const SettingScreen = () => {
         secureTextEntry
       />
       
-      {/* Nút "Save updates" chỉ hiện khi đang ở chế độ chỉnh sửa */}
+    
       {isEditing && (
         <Button mode="contained" onPress={handleSave} style={styles.button}>
           Save updates
