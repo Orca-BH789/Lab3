@@ -1,8 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { CustomerScreen, AdminScreen, SettingScreen, TransactionScreen } from '../screen/index';
+import { CustomerScreen, SettingScreen, TransactionScreen } from '../screen/index';
 import { ServiceStack } from './RouterService';
+import { House, UsersRound, Banknote, Settings } from 'lucide-react-native'; 
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -11,47 +12,44 @@ const TabNavigator = () => (
   <Tab.Navigator
     initialRouteName="Home"
     activeColor="#e91e63"
+    inactiveColor="black"
     barStyle={{ backgroundColor: 'white' }}
-    screenOptions={{
-      tabBarIcon: ({ focused, color }) => {
-        const iconName = focused ? color : 'gray';
-        return color;
-      },
-    }}
+    labeled={false}    
   >
     <Tab.Screen
       name="Home"
       component={ServiceStack}
       options={{
-        tabBarIcon: 'home'
+        tabBarIcon: ({ focused }) => (
+          <House size={28} color={focused ? "#e91e63" : "black"} />
+        ),
       }}
     />
     <Tab.Screen
       name="Customer"
       component={CustomerScreen}
-      options={{
-        tabBarIcon: 'account'
-      }}
-    />
-    <Tab.Screen
-      name="Admin"
-      component={AdminScreen}
-      options={{
-        tabBarIcon: 'shield-account'
+      options={{       
+        tabBarIcon: ({ focused }) => (
+          <UsersRound size={28} color={focused ? "#e91e63" : "black"} />
+        ),
       }}
     />
     <Tab.Screen
       name="Transaction"
       component={TransactionScreen}
-      options={{
-        tabBarIcon: 'bank-transfer'
+      options={{       
+        tabBarIcon: ({ focused }) => (
+          <Banknote size={28} color={focused ? "#e91e63" : "black"} />
+        ),
       }}
     />
     <Tab.Screen
       name="Setting"
       component={SettingScreen}
-      options={{
-        tabBarIcon: 'cog'
+      options={{       
+        tabBarIcon: ({ focused }) => (
+          <Settings size={28} color={focused ? "#e91e63" : "black"} />
+        ),
       }}
     />
   </Tab.Navigator>

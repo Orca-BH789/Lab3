@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import auth from '@react-native-firebase/auth';
@@ -9,25 +9,29 @@ export const SettingScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
-
   const [displayName, setDisplayName] = useState(user?.displayName || '');
-  const [birthday, setBirthday] = useState(user?.birthday || '');
-  const [address, setAddress] = useState(user?.address || '');
+
+  const [email, setEmail] = useState(user?.email || '');
+  const [password, setPassword] = useState('');
+
+  const [isEditing, setIsEditing] = useState(false); // Trạng thái để theo dõi có đang chỉnh sửa hay không
 
   useEffect(() => {
-    // Nếu cần, bạn có thể tải lại dữ liệu người dùng từ Firebase Authentication
     const currentUser = auth().currentUser;
     if (currentUser) {
       setDisplayName(currentUser.displayName || '');
-      // Lưu ý: birthday và address không được lưu trong Firebase Authentication
-      // Bạn có thể lấy dữ liệu này từ Firestore nếu cần.
+      setEmail(currentUser.email || '');
     }
   }, []);
 
   const handleSave = async () => {
     try {
       await auth().currentUser.updateProfile({ displayName });
+      if (password) {
+        await auth().currentUser.updatePassword(password);
+      }
       Alert.alert('Success', 'Profile updated successfully!');
+      setIsEditing(false); 
     } catch (error) {
       console.error('Error updating profile: ', error);
       Alert.alert('Error', 'Failed to update profile');
@@ -36,33 +40,56 @@ export const SettingScreen = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    auth().signOut().catch(error => console.log('Error logging out: ', error));
+    auth().signOut().catch((error) => console.log('Error logging out: ', error));
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>Settings</Text>
+      <Text style={styles.subHeader}>
+        Change your basic account settings here. You may also want to{' '}
+        <Text style={styles.link}>edit your profile</Text>.
+      </Text>
+
       <TextInput
-        label="Display Name"
         value={displayName}
         onChangeText={setDisplayName}
+        editable={isEditing} 
         style={styles.input}
+        placeholder="Your name"
+      />
+    
+      <TextInput
+        value={email}
+        onChangeText={setEmail}
+        editable={isEditing} 
+        style={styles.input}
+        placeholder="Your email"
+        keyboardType="email-address"
       />
       <TextInput
-        label="Birthday"
-        value={birthday}
-        onChangeText={setBirthday}
+        value={password}
+        onChangeText={setPassword}
+        editable={isEditing} 
         style={styles.input}
-        placeholder="YYYY-MM-DD"
+        placeholder="***********"
+        secureTextEntry
       />
-      <TextInput
-        label="Address"
-        value={address}
-        onChangeText={setAddress}
-        style={styles.input}
-      />
-      <Button mode="contained" onPress={handleSave} style={styles.button}>
-        Save
+      
+      {/* Nút "Save updates" chỉ hiện khi đang ở chế độ chỉnh sửa */}
+      {isEditing && (
+        <Button mode="contained" onPress={handleSave} style={styles.button}>
+          Save updates
+        </Button>
+      )}
+
+      <Button 
+        mode="outlined" 
+        onPress={() => setIsEditing(!isEditing)} 
+        style={styles.button}>
+        {isEditing ? 'Cancel' : 'Edit'} 
       </Button>
+
       <Button mode="outlined" onPress={handleLogout} style={styles.button}>
         Logout
       </Button>
@@ -76,10 +103,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  subHeader: {
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  link: {
+    color: '#007bff',
+    textDecorationLine: 'underline',
+  },
   input: {
     marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    padding: 8,
+    fontSize: 16,
   },
   button: {
     marginBottom: 16,
   },
 });
+
+export default SettingScreen;

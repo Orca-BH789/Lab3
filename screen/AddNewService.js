@@ -75,7 +75,7 @@ const AddNewService = ({ route, navigation }) => {
       finalUpdate: Date.now(), 
     };
     if (!id) {
-      service.time = Date.now(); 
+      service.time = Date.now();
     }else {
       const existingService = services.find(s => s.id === id);
       if (existingService) {

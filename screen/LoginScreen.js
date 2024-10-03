@@ -106,9 +106,7 @@ export const LoginScreen = ({ navigation }) => {
                 onBlur={handleBlur('password')}
               />
               <FormErrorMessage error={errors.password} visible={touched.password} />
-              
               {errorState !== '' && <FormErrorMessage error={errorState} visible={true} />}
-              
               <Button style={styles.button} onPress={handleSubmit} disabled={loading}>
                 <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Login'}</Text>
               </Button>

@@ -10,4 +10,4 @@ import { TransactionScreen} from './Transaction';
 
 
 
-export { SignupScreen, LoginScreen, ForgotPasswordScreen,/*  HomeScreen, */ CustomerScreen, AdminScreen, SettingScreen, TransactionScreen };
+export { SignupScreen, LoginScreen, ForgotPasswordScreen,/*  HomeScreen, */ CustomerScreen/* , AdminScreen */, SettingScreen, TransactionScreen };
