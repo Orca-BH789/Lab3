@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { getTransactions } from '../store/slices/transactionService';
+import { getTransactions} from '../store/slices/transactionService';
 import { Calendar, CreditCard, Wallet } from 'lucide-react-native';
 
 export const TransactionScreen = () => {
@@ -56,7 +56,7 @@ export const TransactionScreen = () => {
   const renderTransaction = ({ item }) => (
     <View style={styles.transactionItem}>
       <View style={styles.transactionHeader}>
-        <Text style={styles.customerName}>{item.userName}</Text>
+        <Text style={styles.customerName}>Customer: {item.userName}</Text>
         <Text style={styles.timestamp}>
           {new Date(item.timestamp).toLocaleDateString('vi-VN')}
         </Text>

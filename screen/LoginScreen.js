@@ -63,7 +63,7 @@ export const LoginScreen = ({ navigation }) => {
         }
         dispatch(setUser({ id: user.uid, email: user.email, displayname: user.displayName }));
     } catch (error) {
-      setErrorState(error.message);
+      setErrorState(error.code);
     }
   };
 

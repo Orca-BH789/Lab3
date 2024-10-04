@@ -26,8 +26,18 @@ export const ServiceStack = () => {
       <Stack.Screen 
         name="ServiceDetail" 
         component={ServiceDetail} 
-        options={{ headerTitle: 'Info Service', headerShown: true }} 
-      />
+        options={{
+          headerTitle: 'Thông tin dịch vụ',
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: '#ffffff',
+          },
+          headerTintColor: '#000000',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+    },
+  }}
+/>
     </Stack.Navigator>
   );
 };

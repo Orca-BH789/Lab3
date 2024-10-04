@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import { Images, Colors } from '../config';
@@ -26,6 +27,10 @@ export const SignupScreen = ({ navigation }) => {
     try {
       const userCredential = await auth().createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
+      await firestore().collection('users').doc(user.uid).set({
+        email: user.email,
+        role: 'CUSTOMER', 
+      });
       auth().signOut();
       await user.sendEmailVerification();     
       Alert.alert('Please check your email to verify your account before logging in.');

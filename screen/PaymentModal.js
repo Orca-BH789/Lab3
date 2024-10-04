@@ -28,8 +28,7 @@ export default function PaymentModal({ visible, onClose, user, services = [] }) 
         paymentMethod,
         timestamp: new Date().toISOString(),
         }; 
-      await saveTransaction(transactionData); 
-      await fetchTransactions();
+      await saveTransaction(transactionData);    
       onClose();
       setPaymentMethod(null);
     } catch (error) {

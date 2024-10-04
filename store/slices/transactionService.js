@@ -1,4 +1,4 @@
-import { db } from '../firebaseConfig'; // Make sure this path is correct
+import { db } from '../firebaseConfig'; 
 import { collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from 'firebase/firestore';
 
 export const saveTransaction = async (transactionData) => {

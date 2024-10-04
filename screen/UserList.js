@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
-import { QrCode, CreditCard, Trash2 } from 'lucide-react-native'; 
-
+import { QrCode, CreditCard, Trash2, Edit2, X } from 'lucide-react-native';
+import { UserRole, usePermissions } from '../store/slices/auth-types';
 const UserList = ({ 
   users, 
   loading, 
   onDeleteUser, 
   onUpdateUser,
   onSelectServices,
-  onOpenPayment 
+  onOpenPayment,
+  currentUserRole, 
 }) => {
   const [editingUser, setEditingUser] = useState(null);
   const [updatedName, setUpdatedName] = useState('');
   const [updatedDepartment, setUpdatedDepartment] = useState('');
-
+  const permissions = usePermissions(currentUserRole);
   const handleUpdatePress = (user) => {
     setEditingUser(user);
     setUpdatedName(user.name);
@@ -44,7 +45,7 @@ const UserList = ({
             onChangeText={setUpdatedDepartment}
             placeholder="Phòng"
           />
-          <View style={styles.buttonContainer}>
+          <View style={styles.editButtonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.submitButton]}
               onPress={handleUpdateSubmit}
@@ -55,7 +56,7 @@ const UserList = ({
               style={[styles.button, styles.cancelButton]}
               onPress={() => setEditingUser(null)}
             >
-              <Text style={styles.buttonText}>Hủy</Text>
+              <X size={20} color="white" />
             </TouchableOpacity>
           </View>
         </View>
@@ -65,25 +66,30 @@ const UserList = ({
             <Text style={styles.userName}>{item.name}</Text>
             <Text style={styles.userDetail}>Phòng: {item.department}</Text>
           </View>
-          <View style={styles.buttonContainer}>           
+          <View style={styles.actionContainer}>
             <TouchableOpacity 
-              style={[styles.button, styles.iconButton]} 
+              style={[styles.actionButton, styles.qrButton]} 
               onPress={() => onSelectServices(item)}
             >
               <QrCode size={20} color="white" />
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[styles.button, styles.iconButton]} 
+              style={[styles.actionButton, styles.paymentButton]} 
               onPress={() => onOpenPayment(item)}
             >
               <CreditCard size={20} color="white" />
             </TouchableOpacity>
-
             <TouchableOpacity 
-              style={[styles.button, styles.deleteButton]} 
+              style={[styles.actionButton, styles.editButton]} 
+              onPress={() => handleUpdatePress(item)}
+            >
+              <Edit2 size={20} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.actionButton, styles.deleteButton]} 
               onPress={() => onDeleteUser(item.id)}
             >
-               <Trash2 size={20} color="white" />
+              <Trash2 size={20} color="white" />
             </TouchableOpacity>
           </View>
         </>
@@ -94,8 +100,8 @@ const UserList = ({
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Đang tải...</Text>
+        <ActivityIndicator size="large" color="#6200EE" />
+        <Text style={styles.loadingText}>Đang tải...</Text>
       </View>
     );
   }
@@ -110,83 +116,111 @@ const UserList = ({
   );
 }
 
+export default UserList;
+
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#6200EE',
   },
   listContainer: {
     flexGrow: 1,
+    padding: 16,
+    backgroundColor: '#F5F5F5',
   },
   userItem: {
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 15,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
-    backgroundColor: '#fff',
-    marginBottom: 10,
-    borderRadius: 5,
-    elevation: 2,
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+    marginBottom: 12,
+    borderRadius: 8,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   userInfo: {
-    flex: 1,
+    marginBottom: 12,
   },
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    color: '#333333',
+    marginBottom: 4,
   },
   userDetail: {
     fontSize: 14,
-    color: '#666',
+    color: '#666666',
   },
-  buttonContainer: {
+  actionContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: 10,
   },
-  button: {
+  actionButton: {
     padding: 8,
-    borderRadius: 5,
-    marginLeft: 10,
-    minWidth: 40,
+    borderRadius: 20,
+    marginLeft: 8,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconButton: {
-    backgroundColor: '#2196F3',
-    padding: 8,
-  },
-  updateButton: {
+  qrButton: {
     backgroundColor: '#4CAF50',
+  },
+  paymentButton: {
+    backgroundColor: '#2196F3',
+  },
+  editButton: {
+    backgroundColor: '#FFC107',
   },
   deleteButton: {
     backgroundColor: '#F44336',
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
   editForm: {
-    marginTop: 10,
+    marginTop: 12,
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: '#E0E0E0',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 8,
-    borderRadius: 5,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    backgroundColor: '#FAFAFA',
+  },
+  editButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    padding: 10,
+    borderRadius: 4,
+    marginLeft: 8,
+    minWidth: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   submitButton: {
     backgroundColor: '#4CAF50',
   },
   cancelButton: {
     backgroundColor: '#9E9E9E',
+    width: 40,
+    minWidth: 40,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 
-export default UserList;
